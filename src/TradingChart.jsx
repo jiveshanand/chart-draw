@@ -1,13 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { createChart } from 'lightweight-charts'
 
-function TradingChart() {
+function TradingChart({ autoDraw = false, symbol = 'AAPL' }) {
   const chartContainerRef = useRef(null)
   const chartRef = useRef(null)
   const seriesRef = useRef(null)
   const [drawingMode, setDrawingMode] = useState('trendline')
   const [drawings, setDrawings] = useState([])
   const drawingStartRef = useRef(null)
+  const autoDrawnRef = useRef(false)
 
   // Generate sample candlestick data for AAPL (Apple)
   const generateSampleData = () => {
@@ -133,6 +134,18 @@ function TradingChart() {
     }
   }, [drawingMode])
 
+  // Auto-draw effect when autoDraw prop is true
+  useEffect(() => {
+    if (autoDraw && chartRef.current && seriesRef.current && !autoDrawnRef.current) {
+      // Wait for chart to render, then draw automatically
+      setTimeout(() => {
+        const data = generateSampleData()
+        drawTrendLineAutomatically(data)
+        autoDrawnRef.current = true
+      }, 500)
+    }
+  }, [autoDraw, chartRef.current, seriesRef.current])
+
   const createDrawing = (drawing) => {
     if (!chartRef.current || !seriesRef.current) return
 
@@ -187,6 +200,55 @@ function TradingChart() {
         { time: maxTime, value: maxPrice },
       ])
     }
+  }
+
+  // Programmatic Drawing API - Auto draw trend line
+  const drawTrendLineAutomatically = (data) => {
+    if (!chartRef.current || !data || data.length < 2) return
+
+    // Find significant points for trend line (e.g., first low to last high)
+    const startIndex = Math.floor(data.length * 0.2) // Start at 20% of data
+    const endIndex = Math.floor(data.length * 0.8) // End at 80% of data
+
+    const startPoint = data[startIndex]
+    const endPoint = data[endIndex]
+
+    // Create trend line drawing object
+    const trendLineDrawing = {
+      id: Date.now(),
+      type: 'trendline',
+      start: {
+        time: startPoint.time,
+        price: startPoint.low,
+      },
+      end: {
+        time: endPoint.time,
+        price: endPoint.high,
+      },
+    }
+
+    // Use the drawing API to create the trend line
+    createDrawing(trendLineDrawing)
+    setDrawings(prev => [...prev, trendLineDrawing])
+
+    // Also add a horizontal support line programmatically
+    const supportLineDrawing = {
+      id: Date.now() + 1,
+      type: 'horizontal',
+      start: {
+        time: data[0].time,
+        price: Math.min(...data.slice(0, 30).map(d => d.low)),
+      },
+      end: {
+        time: data[data.length - 1].time,
+        price: Math.min(...data.slice(0, 30).map(d => d.low)),
+      },
+    }
+
+    createDrawing(supportLineDrawing)
+    setDrawings(prev => [...prev, supportLineDrawing])
+
+    console.log('✅ Programmatically drew trend line and support line using Drawing API')
   }
 
   const clearAllDrawings = () => {
@@ -271,15 +333,18 @@ function TradingChart() {
       </div>
 
       <div className="chart-info">
-        <span className="info-label">Symbol: <strong>AAPL</strong></span>
-        <span className="info-label">Active Tool: <strong>{drawingMode}</strong></span>
+        <span className="info-label">Symbol: <strong>{symbol}</strong></span>
+        <span className="info-label">Active Tool: <strong>{autoDraw ? 'Auto-Draw API' : drawingMode}</strong></span>
         <span className="info-label">Drawings: <strong>{drawings.length}</strong></span>
+        {autoDraw && <span className="info-label" style={{ color: '#4CAF50' }}>✨ Auto-drawn using Drawing API</span>}
       </div>
 
       <div ref={chartContainerRef} className="chart-container" />
 
       <div className="instructions">
-        Click once to start drawing, click again to finish. Use the toolbar to switch between drawing tools.
+        {autoDraw
+          ? '✨ This chart was created with programmatically drawn trend lines using the Drawing API!'
+          : 'Click once to start drawing, click again to finish. Use the toolbar to switch between drawing tools.'}
       </div>
     </div>
   )
