@@ -1,59 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Charts with Drawing Tools</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>📈 Trading Chart Application</h1>
-            <div class="toolbar">
-                <button id="btn-trendline" class="tool-btn" title="Draw Trendline">
-                    📏 Trendline
-                </button>
-                <button id="btn-horizontal" class="tool-btn" title="Draw Horizontal Line">
-                    ➖ Horizontal
-                </button>
-                <button id="btn-vertical" class="tool-btn" title="Draw Vertical Line">
-                    | Vertical
-                </button>
-                <button id="btn-rectangle" class="tool-btn" title="Draw Rectangle">
-                    ▭ Rectangle
-                </button>
-                <button id="btn-clear" class="tool-btn danger" title="Clear All Drawings">
-                    🗑️ Clear All
-                </button>
-                <button id="btn-undo" class="tool-btn" title="Undo Last Drawing">
-                    ↶ Undo
-                </button>
-            </div>
-        </div>
-        
-        <div class="chart-info">
-            <div class="info-item">
-                <span class="label">Symbol:</span>
-                <span class="value" id="symbol">SAMPLE/USD</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Active Tool:</span>
-                <span class="value" id="active-tool">None</span>
-            </div>
-            <div class="info-item">
-                <span class="label">Drawings:</span>
-                <span class="value" id="drawing-count">0</span>
-            </div>
-        </div>
-
-        <div id="chart-container"></div>
-        
-        <div class="footer">
-            <p>Click on the chart to start drawing. Use the toolbar above to select different drawing tools.</p>
-        </div>
-    </div>
-
-    <script type="module" src="/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TradingView Chart with Drawing Tools</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
