@@ -1,0 +1,25 @@
+{
+  "name": "trading-charts-app",
+  "version": "1.0.0",
+  "description": "A trading chart application with drawing tools using TradingView Lightweight Charts",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "trading",
+    "charts",
+    "drawing-tools",
+    "candlestick",
+    "technical-analysis"
+  ],
+  "author": "Jivesh",
+  "license": "MIT",
+  "dependencies": {
+    "lightweight-charts": "^5.0.9",
+    "vite": "^7.2.2"
+  }
+}
